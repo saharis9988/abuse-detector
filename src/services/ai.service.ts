@@ -1,14 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { metadataService } from "./metadata.service";
-import { Message, MessageParam, TextBlock } from "@anthropic-ai/sdk/resources";
-import { response } from "express";
-class AiService {
-  private client: Anthropic;
-  constructor() {
-    this.client = new Anthropic({
-      apiKey: process.env["ANTHROPIC_API_KEY"],
-    });
-  }
+import { Message, MessageParam } from "@anthropic-ai/sdk/resources";
+import { ANTHROPIC_CLIENT, resolveDependency } from "../DI";
+
+export class AiService {
+  private client: Anthropic = resolveDependency(ANTHROPIC_CLIENT);
 
   async getRecommendtation(testedTemplate: string) {
     const promptMessages = await this.getPromptMessages(testedTemplate);
@@ -39,16 +35,16 @@ class AiService {
           {
             type: "text",
             text: `I am angular developer. I have a template and I want to understand if I can replace an element inside of it with element from my components library.
-             The component lib and the template I provide you are written in angular.
-             This is a json file includes all the components I have with their template:${JSON.stringify(
-               clContent
-             )}.
-             The problemetic template I have is:
-         ${testedTemplate}
+                   The component lib and the template I provide you are written in angular.
+                   This is a json file includes all the components I have with their template:${JSON.stringify(
+                     clContent
+                   )}.
+                  The problemetic template I have is:
+                   ${testedTemplate}
 
-please give me your answer in json format:
-      one sentense with recommendation with key name: recommendation
-      modified template: with key name template
+                  Please give me your answer in json format:
+                  one sentense with recommendation with key name: recommendation
+                  modified template: with key name template
             `,
           },
         ],
@@ -56,5 +52,3 @@ please give me your answer in json format:
     ];
   }
 }
-
-export const aiService = new AiService();

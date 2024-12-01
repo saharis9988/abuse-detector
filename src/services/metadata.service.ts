@@ -1,10 +1,10 @@
 import { glob } from "glob";
 import fs from "node:fs/promises";
-class MetadataService {
+export class MetadataService {
   public getCLContent() {
     //todo: load files from github
     return glob(
-      "../dozi-component-library/projects/component-lib/components/**/*.html"
+      "../component-library/projects/component-lib/components/**/*.html"
     )
       .then((files) => {
         return files.map((file) => ({
